@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetlinks.docs.entity.PullRequestParam;
 import org.jetlinks.docs.service.DocsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.jetlinks.docs.service.YuQueDocumentUpdaterService;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
@@ -31,8 +28,10 @@ public class DocsController {
      */
     @PostMapping("/pull/request")
     public Mono<String> queryAndSavePullRequest(@RequestParam(required = false) String mode,
-                                                @RequestBody Mono<PullRequestParam> mono) {
-        return mono.flatMap(param -> service.queryAndBuildPullRequest(mode, param));
+                                                @RequestBody Mono<PullRequestParam> mono,
+                                                YuQueDocumentUpdaterService yuQueService) {
+        return mono.flatMap(param -> service.queryAndBuildPullRequest(mode, param, yuQueService));
+
     }
 
 }

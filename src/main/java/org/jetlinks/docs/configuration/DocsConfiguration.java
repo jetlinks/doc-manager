@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author zhangji 2023/2/21
  */
-@EnableConfigurationProperties(DocsProperties.class)
+@EnableConfigurationProperties({DocsProperties.class, PullRequestParamConfig.class, YuQueParamsConfig.class})
 @Configuration
 public class DocsConfiguration {
 

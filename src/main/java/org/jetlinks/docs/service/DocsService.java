@@ -29,11 +29,10 @@ public class DocsService {
      * @return 文档
      * @see PullRequestContentMode
      */
-    public Mono<String> queryAndBuildPullRequest(String mode,
-                                                 PullRequestParam param) {
+    public Mono<String> queryAndBuildPullRequest(String mode, PullRequestParam param, YuQueDocumentUpdaterService yuQueService) {
         return this
                 .getTask(mode)
-                .flatMap(clientTask -> clientTask.apply(param));
+                .flatMap(clientTask -> clientTask.apply(param, yuQueService));
     }
 
     private Mono<ClientTask> getTask(String mode) {

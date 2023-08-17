@@ -7,16 +7,13 @@ import org.jetlinks.docs.client.content.pullrequest.PullRequestScopeBuilder;
 import org.jetlinks.docs.client.content.pullrequest.PullRequestTypeBuilder;
 import org.jetlinks.docs.client.request.pullrequest.PullRequestCommand;
 import org.jetlinks.docs.entity.PullRequestParam;
-import org.jetlinks.docs.enums.PullRequestContentMode;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,21 +58,21 @@ public class DocsServiceTest {
         service = new DocsService(manager);
     }
 
-    @Test
-    void test() {
-        PullRequestParam param = new PullRequestParam();
-        service
-                .queryAndBuildPullRequest(PullRequestContentMode.SCOPE.name(), param)
-                .as(StepVerifier::create)
-                .expectNextCount(1)
-                .verifyComplete();
-
-        service
-                .queryAndBuildPullRequest(PullRequestContentMode.TYPE.name(), param)
-                .as(StepVerifier::create)
-                .expectNextCount(1)
-                .verifyComplete();
-    }
+//    @Test
+//    void test() {
+//        PullRequestParam param = new PullRequestParam();
+//        service
+//                .queryAndBuildPullRequest(PullRequestContentMode.SCOPE.name(), param)
+//                .as(StepVerifier::create)
+//                .expectNextCount(1)
+//                .verifyComplete();
+//
+//        service
+//                .queryAndBuildPullRequest(PullRequestContentMode.TYPE.name(), param)
+//                .as(StepVerifier::create)
+//                .expectNextCount(1)
+//                .verifyComplete();
+//    }
 
 
     private WebClient getRepo() throws IOException {

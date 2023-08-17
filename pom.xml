@@ -256,6 +256,17 @@
                 <version>31.0.1-jre</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty</artifactId>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

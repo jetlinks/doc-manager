@@ -55,17 +55,19 @@ public abstract class AbstractPullRequestBuilder implements DocsContentBuilder {
                 })
                 .groupBy(MarkdownInfo::getRepoName)
                 .flatMap(repoGroup -> repoGroup
-                        .groupBy(this::doGroup)
-                        .flatMap(group -> group
+//                        .groupBy(this::doGroup)
+//                        .flatMap(group -> group
                                 .sort(Comparator.comparing(MarkdownInfo::getMergedAt).reversed())
                                 .collectList()
                                 .map(this::parseMarkdownInfo)
                                 .flatMapIterable(Function.identity())
                                 .map(this::doBuildMarkdown)
                                 .collectList()
-                                .map(markdownList -> getGroupTitle(group.key()) + String.join("\n", markdownList)))
-                        .collectList()
-                        .map(markdownList -> getRepoGroupTitle(repoGroup.key()) + String.join("\n", markdownList)))
+//                                .map(markdownList -> getGroupTitle(group.key()) + String.join("\n", markdownList))
+                                .map(markdownList -> String.join("\n", markdownList))
+//                        .collectList()
+                                .map(markdownList -> getRepoGroupTitle(repoGroup.key()) + String.join("\n", markdownList))
+                )
                 .collectList()
                 .map(markdownList -> getHead() + String.join("\n", markdownList));
     }
@@ -86,6 +88,7 @@ public abstract class AbstractPullRequestBuilder implements DocsContentBuilder {
     protected String getGroupTitle(String title) {
         return "## " + title + "\n";
     }
+
 
     protected abstract String doGroup(MarkdownInfo markdownInfo);
 
@@ -128,7 +131,7 @@ public abstract class AbstractPullRequestBuilder implements DocsContentBuilder {
             markdownInfo.setRepoName(pullRequestInfo.getHead().getRepo().getName());
             Detail detail = Detail.of(pullRequestInfo).with(title);
             addDetail(markdownInfo.getScopeInfo(), detail.getScope(), Collections.singletonList(detail));
-            addDetail(markdownInfo.getTypeInfo(), detail.getType(), Collections.singletonList(detail));
+            addDetail(markdownInfo.getTypeInfo(), CommitType.parse(detail.getType()).getText(), Collections.singletonList(detail));
 
             return markdownInfo;
         }
@@ -143,6 +146,7 @@ public abstract class AbstractPullRequestBuilder implements DocsContentBuilder {
             if (markdownInfo.getTypeInfo() != null) {
                 markdownInfo
                         .getTypeInfo()
+//                        .forEach((key, value) -> addDetail(this.getTypeInfo(), CommitType.parse(key).getText(), value));
                         .forEach((key, value) -> addDetail(this.getTypeInfo(), key, value));
             }
 
@@ -218,19 +222,21 @@ public abstract class AbstractPullRequestBuilder implements DocsContentBuilder {
         feat("新功能"),
         fix("bug修复"),
         docs("文档更新"),
-        style("代码风格跳转"),
-        refactor("重构代码"),
-        test("测试代码"),
-        perf("性能优化"),
-        revert("回滚代码"),
-        chore("其他改动");
+//        style("代码风格跳转"),
+//        refactor("重构代码"),
+//        test("测试代码"),
+//        perf("性能优化"),
+//        revert("回滚代码"),
+//        chore("其他改动");
+        chore("代码优化");
 
         private final String text;
 
         public static CommitType parse(String type) {
             return Arrays
                     .stream(values())
-                    .filter(commitType -> commitType.name().equals(type) || type.toLowerCase().contains("revert"))
+//                    .filter(commitType -> commitType.name().equals(type) || type.toLowerCase().contains("revert"))
+                    .filter(commitType -> commitType.name().equals(type))
                     .findAny()
                     .orElse(chore);
         }

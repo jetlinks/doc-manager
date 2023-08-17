@@ -14,3 +14,13 @@ jetlinks:
       webhook-token: jetlinks
       api-token: jetlinks
       api-version: 2022-11-28
+    param:
+      startTime: 2022-11-28 00:00:00
+      mode: scope
+    yuque:
+      id: 136495415
+      token: yuque
+      title: test
+      slug: ms0omgvm77oyb55q
+      format: markdown
+      force_asl: true
