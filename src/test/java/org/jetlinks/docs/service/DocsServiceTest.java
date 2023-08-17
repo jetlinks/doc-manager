@@ -6,14 +6,19 @@ import org.jetlinks.docs.client.DefaultClientTaskManager;
 import org.jetlinks.docs.client.content.pullrequest.PullRequestScopeBuilder;
 import org.jetlinks.docs.client.content.pullrequest.PullRequestTypeBuilder;
 import org.jetlinks.docs.client.request.pullrequest.PullRequestCommand;
+import org.jetlinks.docs.configuration.YuQueConfig;
+import org.jetlinks.docs.configuration.YuQueParamsConfig;
 import org.jetlinks.docs.entity.PullRequestParam;
+import org.jetlinks.docs.enums.PullRequestContentMode;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,11 +34,12 @@ import java.util.function.Predicate;
  */
 public class DocsServiceTest {
 
-    private final String apiToken   = "test";
+    private final String apiToken = "test";
     private final String apiVersion = "test";
 
     private DocsService service;
 
+    private YuQueDocumentUpdateService yuQue;
     @BeforeEach
     void init() throws IOException {
         ClientTaskManager manager = new DefaultClientTaskManager();
@@ -56,23 +62,36 @@ public class DocsServiceTest {
         manager.register(new PullRequestTypeBuilder());
 
         service = new DocsService(manager);
+
+        YuQueParamsConfig params = new YuQueParamsConfig();
+        //语雀 api 请求参数
+        params.setTitle("title");
+        params.setSlug("slug");
+        params.setFormat("format");
+        params.setForce_asl("_force_asl");
+        params.setId("id");
+        params.setToken("token");
+        WebClient webClient = new YuQueConfig(params).yuQueWebClient();
+
+        yuQue = new YuQueDocumentUpdateService(webClient,params);
     }
 
-//    @Test
-//    void test() {
-//        PullRequestParam param = new PullRequestParam();
-//        service
-//                .queryAndBuildPullRequest(PullRequestContentMode.SCOPE.name(), param)
-//                .as(StepVerifier::create)
-//                .expectNextCount(1)
-//                .verifyComplete();
-//
-//        service
-//                .queryAndBuildPullRequest(PullRequestContentMode.TYPE.name(), param)
-//                .as(StepVerifier::create)
-//                .expectNextCount(1)
-//                .verifyComplete();
-//    }
+    //拉取记录并上传语雀
+    @Test
+    void test() {
+        PullRequestParam param = new PullRequestParam();
+        service
+                .queryAndBuildPullRequest(PullRequestContentMode.SCOPE.name(), param, yuQue)
+                .as(StepVerifier::create)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        service
+                .queryAndBuildPullRequest(PullRequestContentMode.TYPE.name(), param, yuQue)
+                .as(StepVerifier::create)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 
 
     private WebClient getRepo() throws IOException {

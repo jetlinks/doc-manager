@@ -8,15 +8,12 @@ import org.jetlinks.docs.entity.PullRequestParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
  * 输入描述.
@@ -54,23 +51,22 @@ public class PullRequestTest {
         }
     }
 
-    @Test
-    void yuQue() throws InterruptedException {
-//        String apiUrl = "https://hanta.yuque.com/api/v2/repos/px7kg1/vwoix4/docs/135984390?title=pr&slug=yyzh6gux3xl59i5p&format=markdown&_force_asl=true";
-        String apiUrl = "https://hanta.yuque.com/api/v2/repos/px7kg1/vwoix4/docs/135984390";
-        String accessToken = "628zLgRuN9ZhdKGVKPe59mqAkkDRXE462YHh3ETJ";
-
-        WebClient webClient = WebClient.builder()
-                .baseUrl(apiUrl)
-                .defaultHeader("X-Auth-Token", accessToken)
-                .build();
-
-        webClient.put()
-                .uri(uriBuilder -> uriBuilder.path("title=pr&slug=yyzh6gux3xl59i5p&format=markdown&_force_asl=true&body=666").build())
-                .body(BodyInserters.fromValue("6666666"))
-                .retrieve()
-                .bodyToMono(Map.class)
-                .subscribe();
-        Thread.sleep(10000);
-    }
+//    @Test
+//    void yuQue() throws InterruptedException {
+//        String apiUrl = "https://hanta.yuque.com/api/v2/repos/px7kg1/vwoix4/docs/136495415";
+//        String accessToken = "token";
+//
+//        WebClient webClient = WebClient.builder()
+//                .baseUrl(apiUrl)
+//                .defaultHeader("X-Auth-Token", accessToken)
+//                .build();
+//
+//        webClient.put()
+//                .uri(uriBuilder -> uriBuilder.path("title=pr&slug=ms0omgvm77oyb55q&format=markdown&_force_asl=true&body=666").build())
+//                .body(BodyInserters.fromValue("6666666"))
+//                .retrieve()
+//                .bodyToMono(Map.class)
+//                .subscribe();
+//        Thread.sleep(10000);
+//    }
 }

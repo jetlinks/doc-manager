@@ -22,10 +22,10 @@ public class ScheduledTask {
         this.config = config;
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 1000 * 60 * 60)//一小时上传一次
     public void update() {
         DocsService docsService = SpringUtils.getBean(DocsService.class);
-        YuQueDocumentUpdaterService yuQueService = SpringUtils.getBean(YuQueDocumentUpdaterService.class);
+        YuQueDocumentUpdateService yuQueService = SpringUtils.getBean(YuQueDocumentUpdateService.class);
         //设置更新参数
         PullRequestParam param = new PullRequestParam();
         param.setMergeStart(LocalDateTime.parse(config.getStartTime(), DATE_TIME_FORMATTER));
