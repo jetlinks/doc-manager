@@ -22,9 +22,11 @@ public class PullRequestScopeBuilder extends AbstractPullRequestBuilder {
 
     @Override
     protected String doGroup(MarkdownInfo markdownInfo) {
-        String scope = markdownInfo.getTitle().getScope();
+//        String scope = markdownInfo.getTitle().getScope();
+        String scope = markdownInfo.getRepoName();
         return scope == null ? "" : scope;
     }
+
 
     @Override
     protected Collection<MarkdownInfo> parseMarkdownInfo(List<MarkdownInfo> infoList) {
@@ -34,7 +36,7 @@ public class PullRequestScopeBuilder extends AbstractPullRequestBuilder {
             if (markdownInfo == null || markdownInfo.getMergedAt() == null) {
                 continue;
             }
-            cache.compute(markdownInfo.getTitle().getType(), (key, old) -> {
+            cache.compute(CommitType.parse(markdownInfo.getTitle().getType()).getText(), (key, old) -> {
                 if (old == null) {
                     old = markdownInfo;
                 } else {
@@ -57,8 +59,10 @@ public class PullRequestScopeBuilder extends AbstractPullRequestBuilder {
         StringBuilder markdown = new StringBuilder();
 
         markdownInfo.getTypeInfo().forEach((type, detailList) -> {
-            markdown.append("### ")
-                    .append(CommitType.parse(type).getText());
+            markdown.append("**")
+//                    .append(CommitType.parse(type).getText());
+                    .append(type)
+                    .append("**");
 
             String currentTitle = null;
             for (Detail detail : detailList) {
@@ -73,6 +77,7 @@ public class PullRequestScopeBuilder extends AbstractPullRequestBuilder {
                 markdown.append(" [#").append(detail.getNumber()).append("]")
                         .append("(").append(detail.getHtmlUrl()).append(") ");
             }
+            markdown.append("\n");
         });
         return markdown.toString();
     }

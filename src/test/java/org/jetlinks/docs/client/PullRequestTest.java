@@ -50,4 +50,23 @@ public class PullRequestTest {
             e.printStackTrace();
         }
     }
+
+//    @Test
+//    void yuQue() throws InterruptedException {
+//        String apiUrl = "https://hanta.yuque.com/api/v2/repos/px7kg1/vwoix4/docs/136495415";
+//        String accessToken = "token";
+//
+//        WebClient webClient = WebClient.builder()
+//                .baseUrl(apiUrl)
+//                .defaultHeader("X-Auth-Token", accessToken)
+//                .build();
+//
+//        webClient.put()
+//                .uri(uriBuilder -> uriBuilder.path("title=pr&slug=ms0omgvm77oyb55q&format=markdown&_force_asl=true&body=666").build())
+//                .body(BodyInserters.fromValue("6666666"))
+//                .retrieve()
+//                .bodyToMono(Map.class)
+//                .subscribe();
+//        Thread.sleep(10000);
+//    }
 }

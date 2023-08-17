@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetlinks.docs.client.request.RequestCommand;
 import org.jetlinks.docs.entity.PullRequestParam;
+import org.jetlinks.docs.service.YuQueDocumentUpdateService;
 import org.jetlinks.docs.utils.MarkdownFileUtils;
 import reactor.core.publisher.Mono;
 
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @AllArgsConstructor
+
 public class ClientTask {
 
     // api请求命令
@@ -25,13 +27,21 @@ public class ClientTask {
      * @param param 请求参数
      * @return 文档
      */
-    public Mono<String> apply(PullRequestParam param) {
+    public Mono<String> apply(PullRequestParam param, YuQueDocumentUpdateService yuQueService) {
+
+
         return requestCommand
                 .apply(param)
                 .doOnNext(markdown -> {
-                    log.info(markdown);
-                    // 生成临时文件
-                    MarkdownFileUtils.writeToFile(markdown, param.getMergeStart(), param.getMergeEnd());
+                            log.info(markdown);
+                            // 生成临时文件
+                            MarkdownFileUtils.writeToFile(markdown, param.getMergeStart(), param.getMergeEnd());
+                        }
+                )
+                //上传语雀
+                .flatMap(markdown -> {
+                    yuQueService.getParams().put("body", markdown);
+                    return yuQueService.updateDocument(yuQueService.getParams()).thenReturn(markdown);
                 });
     }
 

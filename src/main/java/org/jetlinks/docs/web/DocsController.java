@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetlinks.docs.entity.PullRequestParam;
 import org.jetlinks.docs.service.DocsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.jetlinks.docs.service.YuQueDocumentUpdateService;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
@@ -24,6 +21,8 @@ public class DocsController {
 
     private final DocsService service;
 
+    private final YuQueDocumentUpdateService yuQueService;
+
     /**
      * 手动获取指定时间段的PR
      * 按PR标题分类，例如提交了多个仓库，合并在一起。然后分别提供链接
@@ -32,7 +31,8 @@ public class DocsController {
     @PostMapping("/pull/request")
     public Mono<String> queryAndSavePullRequest(@RequestParam(required = false) String mode,
                                                 @RequestBody Mono<PullRequestParam> mono) {
-        return mono.flatMap(param -> service.queryAndBuildPullRequest(mode, param));
+        return mono.flatMap(param -> service.queryAndBuildPullRequest(mode, param, yuQueService));
+
     }
 
 }
